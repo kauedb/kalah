@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/kalah.iml" filepath="$PROJECT_DIR$/.idea/modules/kalah.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/kalah_main.iml" filepath="$PROJECT_DIR$/.idea/modules/kalah_main.iml" group="kalah" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/kalah_test.iml" filepath="$PROJECT_DIR$/.idea/modules/kalah_test.iml" group="kalah" />
+    </modules>
+  </component>
+</project>
