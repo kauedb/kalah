@@ -1,5 +1,6 @@
 package br.com.kauedb.games.kalah.domain;
 
+import br.com.kauedb.games.kalah.exception.InvalidMoveException;
 import lombok.Builder;
 import lombok.Value;
 
@@ -43,7 +44,26 @@ public class Player {
         }
     }
 
+    public class From {
+        private final int quantity;
+        private final int index;
+
+        public From(int quantity, int index) {
+            this.quantity = quantity;
+            this.index = index;
+        }
+
+        public int getQuantity() {
+            return quantity;
+        }
+
+        public int getIndex() {
+            return index;
+        }
+    }
+
     public class FromBuilder {
+
 
         private final int quantity;
 
@@ -52,34 +72,38 @@ public class Player {
         }
 
         public ToConnectorBuilder pit(Integer index) {
-             pits.get(index).getSows().remove(quantity);
-            return new ToConnectorBuilder(quantity);
+            return new ToConnectorBuilder(new From(quantity, index));
         }
 
     }
 
     public class ToConnectorBuilder {
 
-        private final int quantity;
+        private final From from;
 
-        public ToConnectorBuilder(int quantity) {
-            this.quantity = quantity;
+        public ToConnectorBuilder(From from) {
+            this.from = from;
         }
 
         public ToBuilder to() {
-            return new ToBuilder(quantity);
+            return new ToBuilder(from);
         }
     }
 
     public class ToBuilder {
-        private final int quantity;
+        private final From from;
 
-        public ToBuilder(int quantity) {
-            this.quantity = quantity;
+        public ToBuilder(From from) {
+            this.from = from;
         }
 
         public MoveConnectorBuilder pit(Integer index) {
-            pits.get(index).getSows().add(quantity);
+            if(from.getIndex() >= index){
+                throw new InvalidMoveException();
+            }
+
+            pits.get(from.getIndex()).getSows().remove(from.getQuantity());
+            pits.get(index).getSows().add(from.getQuantity());
             return new MoveConnectorBuilder();
         }
     }
