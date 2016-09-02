@@ -1,5 +1,6 @@
 package br.com.kauedb.games.kalah.domain;
 
+import com.google.common.eventbus.Subscribe;
 import org.junit.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -16,4 +17,25 @@ public class SowsAddTest extends AbstractSowsOperationsTest {
 
         assertThat(sows.getQuantity(), is(7));
     }
+
+
+    static class A {
+        @Subscribe
+        public void m(){
+
+        }
+    }
+
+    static class B {
+
+        public void m(){
+
+        }
+    }
+
+    @Test
+    public void should(){
+
+    }
+
 }

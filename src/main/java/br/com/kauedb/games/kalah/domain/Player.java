@@ -27,8 +27,8 @@ public class Player {
     }
 
     public class MoveBuilder {
-        public SowsBuilder sows(final Integer quantity) {
-            return new SowsBuilder(6);
+        public SowsBuilder sows(final int quantity) {
+            return new SowsBuilder(quantity);
         }
     }
 
@@ -63,15 +63,13 @@ public class Player {
     }
 
     public class FromBuilder {
-
-
         private final int quantity;
 
-        public FromBuilder(int quantity) {
+        public FromBuilder(final int quantity) {
             this.quantity = quantity;
         }
 
-        public ToConnectorBuilder pit(Integer index) {
+        public ToConnectorBuilder pit(final Integer index) {
             return new ToConnectorBuilder(new From(quantity, index));
         }
 
@@ -81,7 +79,7 @@ public class Player {
 
         private final From from;
 
-        public ToConnectorBuilder(From from) {
+        public ToConnectorBuilder(final From from) {
             this.from = from;
         }
 
@@ -97,8 +95,8 @@ public class Player {
             this.from = from;
         }
 
-        public MoveConnectorBuilder pit(Integer index) {
-            if(from.getIndex() >= index){
+        public MoveConnectorBuilder pit(final Integer index) {
+            if (from.getIndex() >= index) {
                 throw new InvalidMoveException();
             }
 
