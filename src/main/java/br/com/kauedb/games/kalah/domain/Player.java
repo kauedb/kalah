@@ -1,18 +1,23 @@
 package br.com.kauedb.games.kalah.domain;
 
+import br.com.kauedb.games.kalah.exception.GameHasEndedException;
 import br.com.kauedb.games.kalah.exception.InvalidMoveException;
+import com.google.common.eventbus.EventBus;
 import lombok.Builder;
 import lombok.Value;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Value
 @Builder
 public class Player {
+
     Integer id;
 
     House house = House.houseBuilder().build();
+
     List<Pit> pits = Arrays.asList(
             Pit.builder().sows(Sows.builder().quantity(6).build()).build(),
             Pit.builder().sows(Sows.builder().quantity(6).build()).build(),
@@ -22,7 +27,15 @@ public class Player {
             Pit.builder().sows(Sows.builder().quantity(6).build()).build()
     );
 
+    private void hasGameEnded(){
+        final List<Pit> sowedPits = pits.stream().filter(pit -> pit.getSows().getQuantity() > 0).collect(Collectors.toList());
+        if(!sowedPits.isEmpty()){
+            throw new GameHasEndedException();
+        }
+    }
+
     public MoveBuilder move() {
+        hasGameEnded();
         return new MoveBuilder();
     }
 
@@ -95,14 +108,18 @@ public class Player {
             this.from = from;
         }
 
-        public MoveConnectorBuilder pit(final Integer index) {
-            if (from.getIndex() >= index) {
+        public MoveConnectorBuilder pit(Integer index) {
+            createMovement(index);
+            return new MoveConnectorBuilder();
+        }
+
+        private void createMovement(Integer index) {
+            if(from.getIndex() >= index){
                 throw new InvalidMoveException();
             }
 
             pits.get(from.getIndex()).getSows().remove(from.getQuantity());
             pits.get(index).getSows().add(from.getQuantity());
-            return new MoveConnectorBuilder();
         }
     }
 

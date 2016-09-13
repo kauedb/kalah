@@ -1,17 +1,16 @@
 package br.com.kauedb.games.kalah.view;
 
 import br.com.kauedb.games.kalah.domain.Board;
-import br.com.kauedb.games.kalah.domain.Player;
 import br.com.kauedb.games.kalah.domain.Players;
 import br.com.kauedb.games.kalah.view.resources.MovementResource;
 import br.com.kauedb.games.kalah.view.resources.PlayerResource;
+import com.google.common.eventbus.EventBus;
 import lombok.val;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Arrays;
 
 /**
  */
@@ -19,10 +18,17 @@ import java.util.Arrays;
 @RequestMapping("/boards")
 public class BoardEndpoints {
 
-    private Board board = Board.builder().players(new Players()).build();
+    private final Board board;
+
+    @Autowired
+    public BoardEndpoints(final EventBus eventBus) {
+        this.board = Board.builder().players(
+                Players.builder().build()
+        ).build();
+    }
 
     @RequestMapping(value = "/players/{id}", method = RequestMethod.GET)
-    public HttpEntity<PlayerResource> get(@PathVariable Integer id){
+    public HttpEntity<PlayerResource> get(@PathVariable Integer id) {
         val player = board.getPlayers().getById(id);
         return new ResponseEntity<>(new PlayerResource(player), HttpStatus.OK);
     }
@@ -36,6 +42,5 @@ public class BoardEndpoints {
         return new ResponseEntity<>(movementResource, HttpStatus.CREATED);
     }
 
-    
 
 }
